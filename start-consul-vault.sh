@@ -24,7 +24,7 @@ fi
 #Get the default interface's IP
 def_if=`ip route | grep default | awk '{ print $5 }'`
 host_ip=`ip -4 addr show $def_if | grep -oP '(?<=inet\s)\d+(\.\d+){3}'`
-curl_hostname=$HOSTNAME
+this_hostname=$HOSTNAME
 
 #####################################################
 
@@ -70,7 +70,7 @@ subjectAltName = @alt_names
 [ alt_names ]
 DNS.1 = localhost
 DNS.2 = vault
-DNS.3 = $curl_hostname
+DNS.3 = $this_hostname
 IP.1 = 127.0.0.1
 IP.2 = $host_ip
 EoSan
@@ -175,7 +175,7 @@ docker run \
  echo "Waiting for everything to start fully..."
 
  sleep 5
- ${PWD}/assets/waitfor.sh $curl_hostname:8200 -t 20
+ ${PWD}/assets/waitfor.sh 127.0.0.1:8200 -t 20
 
 
 #####################################################
@@ -186,11 +186,15 @@ if [ ! -f "$vault_init_file" ] ; then
 
  #Initialise Vault via the API because the CLI command fills the output with loads of escape characters
  #which are very difficult to remove
- echo "Initialising Vault..."
- curl --cacert ${volume_dir}/ssl/ca.crt -s -S --request PUT --data '{"secret_shares": 5, "secret_threshold": 3}' https://$curl_hostname:8200/v1/sys/init >$vault_init_file
+ echo
+ echo "Initialising Vault via curl..."
+ echo
+ curl --cacert ${volume_dir}/ssl/ca.crt -s -S --request PUT --data '{"secret_shares": 5, "secret_threshold": 3}' https://127.0.0.1:8200/v1/sys/init >$vault_init_file
  exits=$?
- echo "Curl exit status is $exits"
-
+ echo
+ echo "ERROR: Curl exit status is $exits"
+ echo
+ echo
  if [ "$exits" -ne "0" ]; then
   docker logs -t vault
   exit 1
