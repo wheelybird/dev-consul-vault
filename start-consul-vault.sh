@@ -62,17 +62,18 @@ ST=London
 L=London
 O=Wheelybird
 OU=Vault
-CN=${this_fqdn}
+CN=$this_fqdn
 
 [ req_ext ]
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.1 = localhost
-DNS.2 = vault
-DNS.3 = $this_hostname
-IP.1 = 127.0.0.1
-IP.2 = $host_ip
+DNS.2=$this_fqdn
+DNS.2=localhost
+DNS.3=vault
+DNS.4=$this_hostname
+IP.1=127.0.0.1
+IP.2=$host_ip
 EoSan
 
  cat <<EoSh >$cert_dir/generate_certs.sh
