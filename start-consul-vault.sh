@@ -192,10 +192,14 @@ if [ ! -f "$vault_init_file" ] ; then
  curl --cacert ${volume_dir}/ssl/ca.crt -s -S --request PUT --data '{"secret_shares": 5, "secret_threshold": 3}' https://127.0.0.1:8200/v1/sys/init >$vault_init_file
  exits=$?
  echo
- echo "ERROR: Curl exit status is $exits"
- echo
  echo
  if [ "$exits" -ne "0" ]; then
+  echo "ERROR: Curl exit status is $exits"
+  echo
+  echo
+  echo "Docker logs:"
+  echo
+  echo
   docker logs -t vault
   exit 1
  fi
