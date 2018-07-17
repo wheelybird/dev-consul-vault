@@ -68,7 +68,7 @@ CN=$this_fqdn
 subjectAltName = @alt_names
 
 [ alt_names ]
-DNS.2=$this_fqdn
+DNS.1=$this_fqdn
 DNS.2=localhost
 DNS.3=vault
 DNS.4=$this_hostname
